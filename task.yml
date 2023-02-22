@@ -1,0 +1,24 @@
+---
+- name: "show interface vlan infor"
+  ios_command:
+    commands:
+      - show inter status
+      - show cdp neighbors
+  register: interface_infor    
+
+- name: 'parse output'
+  set_fact: 
+    data: "{{ interface_infor.stdout[0] | parse_genie(command='show inter status', os='ios') }}"
+    data2: "{{ interface_infor.stdout[1] | parse_genie(command='show cdp neighbors', os='ios') }}"
+
+- name: 'output debug'
+  debug:
+    msg: "{{ data2 | cdp_infor }}"
+   # msg: "{{ data2 }}"
+  delegate_to: localhost
+
+- name: 'output debug2'
+  debug:
+    msg: "{{ data2 | cdp_infor | type_debug }}"
+    #msg: "{{ data2 | type_debug }}"
+  delegate_to: localhost
