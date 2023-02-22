@@ -1,0 +1,10 @@
+---
+- name: "cdp neighbor check"
+  #hosts: platform__cisco_ios:&site__hangzhou
+  #hosts: role__switch__distribution_lan:&site__hangzhou
+  gather_facts: no
+  connection: network_cli
+  
+  tasks:
+     - name: "test cdp"
+       include: "test_inter_cdp.yml"
