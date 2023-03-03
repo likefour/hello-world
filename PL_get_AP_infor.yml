@@ -1,0 +1,11 @@
+---
+- name: "cdp neighbor check"
+  hosts: xxxxx
+  hosts: role__switch__access_lan:&site__suzhou_rd
+
+  gather_facts: no
+  connection: network_cli
+  
+  tasks:
+     - name: "test cdp"
+       include: "test_inter_cdp.yml"
