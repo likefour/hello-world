@@ -1,5 +1,5 @@
 from ansible.plugins.filter.core import FilterModule
-
+# get device information from show cdp neighbor cmd
 class FilterModule(FilterModule):
     def filters(self):
         return {
