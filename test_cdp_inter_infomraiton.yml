@@ -48,7 +48,7 @@
 - name: Save facts to CSV file
   lineinfile:
     create: yes
-    dest: /home/panf5/outtest.csv
+    dest: /home/outtest.csv
     #line: "{{ inventory_hostname }}\n{{ item | replace('[', '') | replace(']', '') }}"
     line: "{{ inventory_hostname }} -> {{ item | replace('[', '') | replace(']', '') }}"
   loop: "{{ filter_output }}"
