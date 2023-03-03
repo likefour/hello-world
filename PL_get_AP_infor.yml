@@ -7,5 +7,5 @@
   connection: network_cli
   
   tasks:
-     - name: "test cdp"
-       include: "test_inter_cdp.yml"
+     - name: "get ap informaiton"
+       include: "test_cdp_inter_infomraiton.yml"
