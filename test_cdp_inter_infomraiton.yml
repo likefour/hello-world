@@ -1,4 +1,23 @@
 ---
+- name: "GET TIMESTAMP FOR COMMAND"
+  delegate_to: localhost
+  command: date
+  register: sh_command_timestamp
+
+
+- name: set headers
+  set_fact:
+    headers: ['AP details', "{{ sh_command_timestamp.stdout }}"]
+  delegate_to: localhost
+
+- name: create csv file
+  lineinfile:
+    create: yes
+    dest: /home/panf5/outtest2.csv
+    line: "{{ item }}"
+  loop: "{{ headers }}"
+  delegate_to: localhost
+
 - name: "show interface vlan infor"
   ios_command:
     commands:
@@ -11,7 +30,7 @@
     data: "{{ interface_infor.stdout[0] | parse_genie(command='show inter status', os='ios') }}"
     data2: "{{ interface_infor.stdout[1] | parse_genie(command='show cdp neighbors', os='ios') }}"
 
-- name: 'filter cdp and vlan informaiton'
+- name: 'filter output'
   set_fact:
     cdp_dict: "{{ data2 | cdp_infor }}"
     inter_dict: "{{ data | inter_infor }}"
@@ -38,18 +57,26 @@
   delegate_to: localhost
   
 
-- name: 'output debug2'
+- name: 'output debug'
   debug:
     msg:  "{{ filter_output }}"
-    #msg: "{{ data2 | type_debug }}"
+  delegate_to: localhost
+
+- name: 'AP VLAN interface debug'
+  debug:
+    msg:  "{{ item.key }} -> {{ item.value }}"
+  loop: "{{ data | inter_infor_vlan | dict2items }}"
+  when:
+    - item.value == '308'
   delegate_to: localhost
 
 
 - name: Save facts to CSV file
   lineinfile:
-    create: yes
-    dest: /home/outtest.csv
+   # create: yes
+    dest: /home/panf5/outtest2.csv
     #line: "{{ inventory_hostname }}\n{{ item | replace('[', '') | replace(']', '') }}"
     line: "{{ inventory_hostname }} -> {{ item | replace('[', '') | replace(']', '') }}"
   loop: "{{ filter_output }}"
   delegate_to: localhost
+    
